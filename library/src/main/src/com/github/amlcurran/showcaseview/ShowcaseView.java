@@ -485,7 +485,7 @@ public class ShowcaseView extends RelativeLayout
             return this;
         }
         
-        public Builder setPredefinedPosition(int predefinedPosition) {
+        public Builder setPredefinedPosition(Position predefinedPosition) {
             showcaseView.setPredefinedPosition(predefinedPosition);
             return this;
         }
