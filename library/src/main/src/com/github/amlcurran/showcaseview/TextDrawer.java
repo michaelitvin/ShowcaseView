@@ -106,42 +106,46 @@ class TextDrawer {
      * @param canvasH height of the screen
      * @param shouldCentreText
      */
-    public void calculateTextPosition(int canvasW, int canvasH, ShowcaseView showcaseView, boolean shouldCentreText) {
+    public void calculateTextPosition(int canvasW, int canvasH, ShowcaseView showcaseView, boolean shouldCentreText, int predefinedPosition) {
 
     	Rect showcase = showcaseView.hasShowcaseView() ?
     			calculator.getShowcaseRect() :
     			new Rect();
     	
     	int[] areas = new int[4]; //left, top, right, bottom
-    	areas[0] = showcase.left * canvasH;
-    	areas[1] = showcase.top * canvasW;
-    	areas[2] = (canvasW - showcase.right) * canvasH;
-    	areas[3] = (canvasH - showcase.bottom) * canvasW;
+    	areas[ShowcaseView.Position.LEFT.ordinal()] = showcase.left * canvasH;
+    	areas[ShowcaseView.Position.TOP.ordinal()] = showcase.top * canvasW;
+    	areas[ShowcaseView.Position.RIGHT.ordinal()] = (canvasW - showcase.right) * canvasH;
+    	areas[ShowcaseView.Position.BOTTOM.ordinal()] = (canvasH - showcase.bottom) * canvasW;
     	
     	int largest = 0;
-    	for(int i = 1; i < areas.length; i++) {
-    		if(areas[i] > areas[largest])
-    			largest = i;
+    	if (predefinedPosition >= 0) {
+    		largest = predefinedPosition;
+    	} else {
+	    	for(int i = 1; i < areas.length; i++) {
+	    		if(areas[i] > areas[largest])
+	    			largest = i;
+	    	}
     	}
     	
     	// Position text in largest area
-    	switch(largest) {
-    	case 0:
+    	switch(ShowcaseView.Position.values()[largest]) {
+    	case LEFT:
     		mBestTextPosition[0] = padding;
     		mBestTextPosition[1] = padding;
     		mBestTextPosition[2] = showcase.left - 2 * padding;
     		break;
-    	case 1:
+    	case TOP:
     		mBestTextPosition[0] = padding;
     		mBestTextPosition[1] = padding + actionBarOffset;
     		mBestTextPosition[2] = canvasW - 2 * padding;
     		break;
-    	case 2:
+    	case RIGHT:
     		mBestTextPosition[0] = showcase.right + padding;
     		mBestTextPosition[1] = padding;
     		mBestTextPosition[2] = (canvasW - showcase.right) - 2 * padding;
     		break;
-    	case 3:
+    	case BOTTOM:
     		mBestTextPosition[0] = padding;
     		mBestTextPosition[1] = showcase.bottom + padding;
     		mBestTextPosition[2] = canvasW - 2 * padding;

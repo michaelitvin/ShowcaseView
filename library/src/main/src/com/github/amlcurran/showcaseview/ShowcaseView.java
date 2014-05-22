@@ -29,6 +29,10 @@ import static com.github.amlcurran.showcaseview.AnimationFactory.AnimationStartL
 public class ShowcaseView extends RelativeLayout
         implements View.OnClickListener, View.OnTouchListener, ViewTreeObserver.OnPreDrawListener, ViewTreeObserver.OnGlobalLayoutListener {
 
+	public enum Position {
+		LEFT, TOP, RIGHT, BOTTOM;
+	}
+	
     private static final int HOLO_BLUE = Color.parseColor("#33B5E5");
 
     private final Button mEndButton;
@@ -58,6 +62,8 @@ public class ShowcaseView extends RelativeLayout
     private long fadeInMillis;
     private long fadeOutMillis;
 
+    private int predefinedPosition = -1;
+    
     protected ShowcaseView(Context context, boolean newStyle) {
         this(context, null, R.styleable.CustomTheme_showcaseViewStyle, newStyle);
     }
@@ -229,7 +235,7 @@ public class ShowcaseView extends RelativeLayout
         boolean recalculatedCling = showcaseAreaCalculator.calculateShowcaseRect(showcaseX, showcaseY, showcaseDrawer);
         boolean recalculateText = recalculatedCling || hasAlteredText;
         if (recalculateText) {
-            textDrawer.calculateTextPosition(getMeasuredWidth(), getMeasuredHeight(), this, shouldCentreText);
+            textDrawer.calculateTextPosition(getMeasuredWidth(), getMeasuredHeight(), this, shouldCentreText, predefinedPosition);
         }
         hasAlteredText = false;
         return true;
@@ -358,7 +364,7 @@ public class ShowcaseView extends RelativeLayout
      */
     public static class Builder {
 
-        final ShowcaseView showcaseView;
+        public final ShowcaseView showcaseView;
         private final Activity activity;
 
         public Builder(Activity activity) {
@@ -478,6 +484,11 @@ public class ShowcaseView extends RelativeLayout
             showcaseView.setOnShowcaseEventListener(showcaseEventListener);
             return this;
         }
+        
+        public Builder setPredefinedPosition(int predefinedPosition) {
+            showcaseView.setPredefinedPosition(predefinedPosition);
+            return this;
+        }
     }
 
     /**
@@ -573,4 +584,8 @@ public class ShowcaseView extends RelativeLayout
         }
     }
 
+    public void setPredefinedPosition(Position predefinedPosition) {
+		this.predefinedPosition = predefinedPosition.ordinal();
+	}
+    
 }
