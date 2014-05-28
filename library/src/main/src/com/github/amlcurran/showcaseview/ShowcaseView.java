@@ -266,14 +266,22 @@ public class ShowcaseView extends RelativeLayout
 
     @Override
     public void onClick(View view) {
-        // If the type is set to one-shot, store that it has shot
-        shotStateStore.storeShot();
         hide();
     }
 
     public void hide() {
+        clearBitmap();
+        // If the type is set to one-shot, store that it has shot
+        shotStateStore.storeShot();
         mEventListener.onShowcaseViewHide(this);
         fadeOutShowcase();
+    }
+
+    private void clearBitmap() {
+        if (bitmapBuffer != null && !bitmapBuffer.isRecycled()) {
+            bitmapBuffer.recycle();
+            bitmapBuffer = null;
+        }
     }
 
     private void fadeOutShowcase() {
